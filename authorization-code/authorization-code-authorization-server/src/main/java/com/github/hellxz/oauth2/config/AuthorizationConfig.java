@@ -28,11 +28,11 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         // @formatter: off
         clients.inMemory()
                 .withClient("client-a") //客户端唯一标识（client_id）
-                    .secret(passwordEncoder.encode("client-a-secret")) //客户端的密码(client_secret)，这里的密码应该是加密后的
-                    .authorizedGrantTypes("authorization_code") //授权模式标识
-                    .scopes("read_user_info") //作用域
-                    .resourceIds("resource1") //资源id
-                    .redirectUris("http://localhost:9001/callback"); //回调地址
+                .secret(passwordEncoder.encode("client-a-secret")) //客户端的密码(client_secret)，这里的密码应该是加密后的
+                .authorizedGrantTypes("authorization_code") //授权模式标识
+                .scopes("read_user_info") //作用域
+                .resourceIds("resource1") //资源id
+                .redirectUris("http://localhost:7083/callback"); //回调地址
         // @formatter: on
     }
 }

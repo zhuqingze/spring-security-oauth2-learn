@@ -1,7 +1,9 @@
-package com.github.hellxz.oauth2.config;
+package com.github.hellxz.clientapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -9,7 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Collections;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
@@ -17,26 +19,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new NoPasswordEncoder();
+    }
+
+    @Autowired
+    private ClientUserDetailsService clientUserDetailsService;
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        //@formatter:off
+        http.authorizeRequests()
+                //仅放通登录接口
+                .antMatchers(HttpMethod.GET, "/", "/index", "/api/login","/callback").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
+        //@formatter:on
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // @formatter: off
-        auth.inMemoryAuthentication()
-                .withUser("tom")
-                .password(passwordEncoder().encode("tom123456"))
-                .authorities(Collections.emptyList());
-        // @formatter: on
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .anyRequest().authenticated() //所有请求都需要通过认证
-                .and()
-                .httpBasic() //Basic提交
-                .and()
-                .csrf().disable(); //关跨域保护
+        auth.userDetailsService(clientUserDetailsService);
     }
 }

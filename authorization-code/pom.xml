@@ -15,6 +15,7 @@
         <module>authorization-code-authorization-server</module>
         <module>authorization-code-resource-server</module>
         <module>authorization-code-client-resttemplate-jdbc</module>
+        <module>authorization-code-clientapp</module>
     </modules>
 
     <dependencies>

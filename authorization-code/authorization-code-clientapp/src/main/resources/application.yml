@@ -1,0 +1,21 @@
+server:
+  port: 7083
+
+spring:
+  http:
+    converters:
+      preferred-json-mapper: jackson
+  thymeleaf:
+    cache: false
+oauth2:
+  client:
+    client-id: client-a
+    client-secret: client-a-secret
+    redirect_uri: http://localhost:${server.port}/callback
+    response_type: code
+    scope: read_user_info
+  server:
+    host: http://localhost:7080
+    authorize-url: ${oauth2.server.host}/oauth/authorize
+    token-url: ${oauth2.server.host}/oauth/token
+    check-token-url: ${oauth2.server.host}/oauth/check_token
